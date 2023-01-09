@@ -1,4 +1,5 @@
 from state import State
+from chess_engine import GameState
 
 class ChessGame(State):  
     def __init__(self):
@@ -7,6 +8,10 @@ class ChessGame(State):
         self.SQ_SIZE = self.BOARD_SIZE / 8
         self.MAX_FPS = 15
         self.IMAGES = self.load_images()
+        self.gs = GameState()
+        self.board_display = BoardDisplay()
+        self.moves_display = MovesDisplay()
+        self.stats_display = StatsDisplay()
         p.display.set_caption("Chess Game")
     @staticmethod
     def load_images():
@@ -16,8 +21,9 @@ class ChessGame(State):
             IMAGES[piece] = p.transform.scale(p.image.load('images/' + piece + '.png'), (SQ_SIZE, SQ_SIZE))
         return IMAGES
 
-    def game_loop(self):
+    def update(self, actions, ):
         while self.playing:
+            self.get
             location = p.mouse.get_pos()
 
             for e in p.event.get():
@@ -78,8 +84,7 @@ class ChessGame(State):
             clock.tick(MAX_FPS)
             p.display.flip()
 
-
-    def draw_game_state(screen, gs, sq_selected, possible_moves, scroll_y):
+    def render(screen, gs, sq_selected, possible_moves, scroll_y):
         screen.fill(CHESS_BG_COLOR)
         draw_board(screen, sq_selected, possible_moves, gs)
         draw_pieces(screen, gs.board)
@@ -113,20 +118,20 @@ class ChessGame(State):
         text = the_font.render(f'Matériel : ', True, p.Color("black"), p.Color(CHESS_BG_COLOR))
         rect = text.get_rect()
         signe = ''
-        message = ''
         if gs.count_material_delta()>0:
             signe = '+ '
         text1 = the_font.render(signe + str(gs.count_material_delta()), True, p.Color("black"))
         screen.blit(text, (0, BOARD_HEIGHT + 1))
         screen.blit(text1, (rect.right, BOARD_HEIGHT + 1))
-        if gs.checkmate:
-            message = "Checkmate !"
-        if gs.stalemate:
-            message = "Stalemate !"
-        if message != '':
-            text2 = the_font.render(message, True, p.Color("black"))
-            screen.blit(text2, (0, SCREEN_HEIGHT - 100))
-    def show_moves(screen , gs, scroll_y):
+
+
+
+class BoardDisplay:
+
+class MovesDisplay:
+    def __init__(self):
+        self.scroll_y = 0
+    def render(self, screen, gs, scroll_y):
 
         move_window = p.surface.Surface((200, 512))
         move_window_rect = move_window.get_rect()
@@ -154,9 +159,8 @@ class ChessGame(State):
         move_window.blit(scrollable_moves, (0, 40))
         p.draw.rect(move_window, p.Color("black"), move_window_rect, 2)
         screen.blit(move_window, (512, 0))
+class StatsDisplay:
+    def __init__(self):
+class ResultWindow:
+    def __init__(self):
 
-class BoardDisplay:
-    
-class MovesDisplay:
-
-class ResultWindow
