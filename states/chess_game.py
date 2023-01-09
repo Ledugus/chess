@@ -2,7 +2,8 @@ from state import State
 from chess_engine import GameState
 
 class ChessGame(State):  
-    def __init__(self):
+    def __init__(self, game):
+        State.__init__(self, game):
         self.CHESS_BG_COLOR = (178, 190, 191)
         self.BOARD_SIZE = 512
         self.SQ_SIZE = self.BOARD_SIZE / 8
@@ -21,7 +22,7 @@ class ChessGame(State):
             IMAGES[piece] = p.transform.scale(p.image.load('images/' + piece + '.png'), (SQ_SIZE, SQ_SIZE))
         return IMAGES
 
-    def update(self, actions, ):
+    def update(self, actions):
         while self.playing:
             self.get
             location = p.mouse.get_pos()
