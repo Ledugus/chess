@@ -1,10 +1,17 @@
+from button import Button
+
 class MainMenu(State):
     def __init__(self, game):
         State.__init__(self, game)
         self.BG = None
-
+        self.play_button = Button(image=p.image.load("images/play_image.png"), pos=(640, 250),
+                             text_input="PLAY", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
+        self.play_button_rect = self.play_button.get_rect()
+        self.quit_button = Button(image=p.image.load("images/play_image.png"), pos=(game.mid_, 550),
+                             text_input="QUIT", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
+        self.quit_button_rect = self.play
     def update(self, actions):
-        if actions["left_click"]:
+        if actions["left_click"] and is_over(actions["mouse_pos"]):
             new_state = ChessGame(self.game)
             new_state.enter_state()
         self.game.reset_keys()
