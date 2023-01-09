@@ -11,7 +11,7 @@ class Game:
         p.init()
         self.SCREEN_WIDTH = 1000
         self.SCREEN_HEIGHT = 720
-        self.SCREEN = p.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+        self.SCREEN = p.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
         self.running, self.playing = True, True
         self.state_stack = []
         self.actions = {"left": False, "right": False, "left_click" : False, "molette_up" : False, "molette_down" : False}
@@ -28,6 +28,7 @@ class Game:
             if event.type == pygame.QUIT:
                 self.playing = False
                 self.running = False
+		
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.playing = False
@@ -36,16 +37,6 @@ class Game:
                     self.actions['left'] = True
                 if event.key == pygame.K_RIGHT:
                     self.actions['right'] = True
-                if event.key == pygame.K_w:
-                    self.actions['up'] = True
-                if event.key == pygame.K_s:
-                    self.actions['down'] = True
-                if event.key == pygame.K_p:
-                    self.actions['action1'] = True
-                if event.key == pygame.K_o:
-                    self.actions['action2'] = True    
-                if event.key == pygame.K_RETURN:
-                    self.actions['start'] = True  
 
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_a:
@@ -54,14 +45,7 @@ class Game:
                     self.actions['right'] = False
                 if event.key == pygame.K_w:
                     self.actions['up'] = False
-                if event.key == pygame.K_s:
-                    self.actions['down'] = False
-                if event.key == pygame.K_p:
-                    self.actions['action1'] = False
-                if event.key == pygame.K_o:
-                    self.actions['action2'] = False
-                if event.key == pygame.K_RETURN:
-                    self.actions['start'] = False
+               
     def update(self):
         self.state_stack[-1].update(self.actions)
 	def load_states(self):
