@@ -1,4 +1,6 @@
-class ChessGame:  
+from state import State
+
+class ChessGame(State):  
     def __init__(self):
         self.CHESS_BG_COLOR = (178, 190, 191)
         self.BOARD_SIZE = 512
@@ -152,3 +154,9 @@ class ChessGame:
         move_window.blit(scrollable_moves, (0, 40))
         p.draw.rect(move_window, p.Color("black"), move_window_rect, 2)
         screen.blit(move_window, (512, 0))
+
+class BoardDisplay:
+    
+class MovesDisplay:
+
+class ResultWindow
