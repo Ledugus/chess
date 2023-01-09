@@ -29,6 +29,7 @@ class GameState:
         self.black_king_pos = (0, 4)
         self.checkmate = False
         self.stalemate = False
+        self.winner = ''
     def count_material_delta(self):
         material = 0
         for r in range(8):
@@ -52,8 +53,10 @@ class GameState:
         if self.get_valid_moves(self.get_all_possible_moves()) == []:
             if self.in_check():
                 self.checkmate = True
+                self.winner = 'b' if self.white_to_move else 'w'
             else:
                 self.stalemate = True
+                self.winner = 'd'
     def undo_move(self):
         if len(self.move_log) != 0:
             move = self.move_log.pop(-1)
@@ -64,7 +67,8 @@ class GameState:
                 self.white_king_pos = (move.start_row, move.start_col)
             if move.piece_moved == 'bK':
                 self.black_king_pos = (move.start_row, move.start_col)
-
+            self.checkmate = False
+            self.stalemate = False
 
     def get_valid_moves(self, moves):
         for i in range(len(moves)-1, -1, -1):

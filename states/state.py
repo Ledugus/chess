@@ -1,10 +1,13 @@
-class State():
+from abc import ABC, abstractmethod
+
+class State(ABC):
     def __init__(self, game):
         self.game = game
         self.prev_state = None
-
-    def update(self, delta_time, actions):
+    @abstractmethod
+    def update(self, actions):
         pass
+    @abstractmethod
     def render(self, surface):
         pass
 

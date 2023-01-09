@@ -1,66 +1,73 @@
 import pygame as p
-import sys
-from button import Button
 from states.main_menu import MainMenu
 from utils import get_font
-from utils import is_over
-
 
 class Game:
     def __init__(self):
         p.init()
         self.SCREEN_WIDTH = 1000
         self.SCREEN_HEIGHT = 720
-        self.SCREEN = p.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
+        self.game_canvas = p.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
         self.running, self.playing = True, True
         self.state_stack = []
         self.actions = {"left": False, "right": False, "left_click" : False, "molette_up" : False, "molette_down" : False}
-        self.load_states()
+        self.title_screen = MainMenu(self)
+        self.font = get_font(100)
+        self.state_stack.append(self.title_screen)
     def game_loop(self):
         while self.playing:
             self.get_events()
             self.update()
             self.render()
+            self.reset_keys()
             
     def get_events(self):
-	self.actions["mouse_pos"] = p.mouse.get_pos()
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+        self.actions["mouse_pos"] = p.mouse.get_pos()
+        for event in p.event.get():
+            if event.type == p.QUIT:
                 self.playing = False
                 self.running = False
-		
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
+            if event.type == p.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    self.actions["left_click"] = True
+                if event.button == 4:
+                    self.actions["molette_up"] = True
+                if event.button == 5:
+                    self.actions["molette_down"] = True
+            if event.type == p.MOUSEBUTTONUP:
+                if event.button == 1:
+                    self.actions["left_click"] = False
+
+            if event.type == p.KEYDOWN:
+                if event.key == p.K_ESCAPE:
                     self.playing = False
                     self.running = False
-                if event.key == pygame.K_LEFT:
+                if event.key == p.K_LEFT:
                     self.actions['left'] = True
-                if event.key == pygame.K_RIGHT:
+                if event.key == p.K_RIGHT:
                     self.actions['right'] = True
 
-            if event.type == pygame.KEYUP:
-                if event.key == pygame.K_a:
+            if event.type == p.KEYUP:
+                if event.key == p.K_LEFT:
                     self.actions['left'] = False
-                if event.key == pygame.K_d:
-                    self.actions['right'] = False
-                if event.key == pygame.K_w:
-                    self.actions['up'] = False
-               
+
+        return self.actions
     def update(self):
         self.state_stack[-1].update(self.actions)
-	def load_states(self):
-        self.title_screen = MainMenu(self)
-        self.state_stack.append(self.title_screen)
     def render(self):
         self.state_stack[-1].render(self.game_canvas)
-        # Render current state to the screen
-        self.screen.blit(pygame.transform.scale(self.game_canvas,(self.SCREEN_WIDTH, self.SCREEN_HEIGHT)), (0,0))
-        pygame.display.flip()
+        p.display.flip()
     
     def reset_keys(self):
         for action in self.actions:
             self.actions[action] = False
-    
+
+    def draw_text(self, surface, text, color, x, y):
+        text_surface = self.font.render(text, True, color)
+        # text_surface.set_colorkey((0,0,0))
+        text_rect = text_surface.get_rect()
+        text_rect.center = (x, y)
+        surface.blit(text_surface, text_rect)
 
 if __name__ == "__main__":
     g = Game()
