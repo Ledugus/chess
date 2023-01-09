@@ -61,7 +61,6 @@ class ChessGame(State):
 
         elif actions["molette_up"] and is_over((512, 0, 200, 512), actions["mouse_pos"]):
             self.scroll_y = min(self.scroll_y + 10, 0)
-            print(self.scroll_y)
         elif actions["molette_down"] and is_over((512, 0, 200, 512), actions["mouse_pos"]):
             nb_lines = math.ceil(len(self.gs.move_log) / 2)
             taille_move_window = nb_lines * 30
@@ -69,9 +68,8 @@ class ChessGame(State):
                 self.scroll_y = 0
             else:
                 self.scroll_y = max(self.scroll_y - 10, -taille_move_window+500)
-            print(self.scroll_y)
-
-
+        self.update_possible_moves()
+    def update_possible_moves(self):
         if self.new_selected:
             if self.sq_selected == ():
                 self.possible_moves = []
@@ -141,7 +139,7 @@ class ChessGame(State):
 
             text += move.notation + checkmate
             text_object = the_font.render(text, True, "Black")
-            scrollable_moves.blit(text_object, (100*(i%2), (30 * (i//2))+self.scroll_y))
+            scrollable_moves.blit(text_object, (100*(i%2)+2, (30 * (i//2))+self.scroll_y))
 
         move_window.blit(title, (4, 4))
         move_window.blit(scrollable_moves, (0, 40))

@@ -18,8 +18,7 @@ class MainMenu(State):
 
 
     def render(self, display):
-        display.fill((255,255,255))
-        self.game.draw_text(display, "Game States Demo", (0,0,0), 0, 0)
+
             
         display.blit(self.BG, (0, 0))
 
