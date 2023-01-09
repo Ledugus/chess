@@ -1,8 +1,18 @@
 class MainMenu(State):
-    pass
+    def __init__(self, game):
+        State.__init__(self, game)
+        self.BG = None
 
-def main_menu():
-    while True:
+    def update(self, actions):
+        if actions["left_click"]:
+            new_state = ChessGame(self.game)
+            new_state.enter_state()
+        self.game.reset_keys()
+
+    def render(self, display):
+        display.fill((255,255,255))
+        self.game.draw_text(display, "Game States Demo", (0,0,0), self.game.GAME_W/2, self.game.GAME_H/2 )
+            
         SCREEN.blit(BG, (0, 0))
 
         mouse_pos = p.mouse.get_pos()
