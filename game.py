@@ -2,6 +2,7 @@ import pygame as p
 from states.main_menu import MainMenu
 from utils import get_font
 
+
 class Game:
     def __init__(self):
         p.init()
@@ -61,7 +62,6 @@ class Game:
     def reset_keys(self):
         for action in self.actions:
             self.actions[action] = False
-
     def draw_text(self, surface, text, color, x, y):
         text_surface = self.font.render(text, True, color)
         # text_surface.set_colorkey((0,0,0))

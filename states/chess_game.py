@@ -2,8 +2,8 @@ import math
 import pygame as p
 from states.state import State
 from chess_engine import GameState, Move
-from utils import is_over
-
+from utils import is_over, get_font
+from button import Button
 class ChessGame(State):  
     def __init__(self, game):
         State.__init__(self, game)
@@ -18,6 +18,11 @@ class ChessGame(State):
         self.valid_moves = []
         self.possible_moves = []
         self.new_selected = False
+        switch_image = p.image.load("images/switch.png")
+        w, h = switch_image.get_size()
+        self.switch_board_button = Button(image=p.transform.scale(switch_image, (20, 20*h/w)), pos=(512-10, 512+10),
+                             text_input="", font=get_font(20), base_color="#d7fcd4", hovering_color="White")
+        self.switched = False
         p.display.set_caption("Chess Game")
     def load_images(self):
         IMAGES = {}
@@ -27,6 +32,7 @@ class ChessGame(State):
         return IMAGES
 
     def update(self, actions):
+        self.switch_board_button.change_color(actions["mouse_pos"])
         if actions["left"]:
 
             self.gs.undo_move()
@@ -34,10 +40,17 @@ class ChessGame(State):
             self.sq_selected = ()
 
         elif actions["left_click"]:
+            if actions["left_click"] and self.switch_board_button.check_for_input(actions["mouse_pos"]):
+                self.switched = not self.switched
+
+
             self.new_selected = True
             col = actions["mouse_pos"][0] // self.SQ_SIZE
             row = actions["mouse_pos"][1] // self.SQ_SIZE
             if row < 8 and col < 8:
+                if self.switched:
+                    row = 7- row
+                    col = 7- col
                 if self.sq_selected == (row, col):
                     self.sq_selected = ()
                     self.player_clicks = []
@@ -48,6 +61,7 @@ class ChessGame(State):
                     move = Move(self.player_clicks[0], self.player_clicks[1], self.gs.board)
                     if move in self.valid_moves:
                         self.gs.make_move(move)
+
                         self.gs.checkmate_stalemate()
                         print(move.notation)
                         self.sq_selected = ()
@@ -86,18 +100,24 @@ class ChessGame(State):
         self.board_display()
         self.stats_display()
         self.moves_display()
+        self.switch_board_button.update(self.game.game_canvas)
     def board_display(self):
         colors = [p.Color("white"), p.Color("gray")]
         for r in range(8):
             for c in range(8):
+                row = r
+                col = c
+                if self.switched:
+                    row = 7 - r
+                    col = 7 - c
                 if (r, c) == self.sq_selected:
-                    p.draw.rect(self.game.game_canvas, p.Color("green"), p.Rect(c * self.SQ_SIZE, r * self.SQ_SIZE, self.SQ_SIZE, self.SQ_SIZE))
+                    p.draw.rect(self.game.game_canvas, p.Color("green"), p.Rect(col * self.SQ_SIZE, row * self.SQ_SIZE, self.SQ_SIZE, self.SQ_SIZE))
                 else:
                     color = colors[(r+c)%2]
-                    p.draw.rect(self.game.game_canvas, color, p.Rect(c*self.SQ_SIZE, r*self.SQ_SIZE, self.SQ_SIZE, self.SQ_SIZE))
+                    p.draw.rect(self.game.game_canvas, color, p.Rect(col*self.SQ_SIZE, row*self.SQ_SIZE, self.SQ_SIZE, self.SQ_SIZE))
 
                 if (r, c) in self.possible_moves:
-                    pos = [(c + 0.5) * self.SQ_SIZE, (r + 0.5) * self.SQ_SIZE]
+                    pos = [(col + 0.5) * self.SQ_SIZE, (row + 0.5) * self.SQ_SIZE]
                     if self.gs.board[r][c] == "--":
 
                         p.draw.circle(self.game.game_canvas, p.Color("green"), pos, 10)
@@ -106,7 +126,7 @@ class ChessGame(State):
                 piece = self.gs.board[r][c]
                 if piece != "--":
                     self.game.game_canvas.blit(self.IMAGES[piece],
-                                p.Rect(c * self.SQ_SIZE, r * self.SQ_SIZE, self.SQ_SIZE, self.SQ_SIZE)
+                                p.Rect(col * self.SQ_SIZE, row * self.SQ_SIZE, self.SQ_SIZE, self.SQ_SIZE)
                                 )
     def stats_display(self):
         the_font = p.font.Font('freesansbold.ttf', 20)
