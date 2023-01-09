@@ -23,6 +23,7 @@ class Game:
             self.render()
             
     def get_events(self):
+	self.actions["mouse_pos"] = p.mouse.get_pos()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.playing = False
