@@ -1,10 +1,9 @@
-from utils import get_font
-from utils import is_over
 import pygame as p
 import sys
 from button import Button
-import chess_engine
 from states.main_menu import MainMenu
+from utils import get_font
+from utils import is_over
 
 
 class Game:
