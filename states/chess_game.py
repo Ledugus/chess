@@ -42,7 +42,8 @@ class ChessGame(State):
         elif actions["left_click"]:
             if actions["left_click"] and self.switch_board_button.check_for_input(actions["mouse_pos"]):
                 self.switched = not self.switched
-
+            if self.resign_button.check_for_input(actions["mouse_pos"]):
+                self.gs.resign()
 
             self.new_selected = True
             col = actions["mouse_pos"][0] // self.SQ_SIZE
