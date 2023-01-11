@@ -57,6 +57,9 @@ class GameState:
             else:
                 self.stalemate = True
                 self.winner = 'd'
+    def resign(self):
+
+        self.winner = "b" if self.white_to_move else "w"
     def undo_move(self):
         if len(self.move_log) != 0:
             move = self.move_log.pop(-1)
