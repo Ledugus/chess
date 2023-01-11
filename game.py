@@ -1,19 +1,16 @@
 import pygame as p
 from states.main_menu import MainMenu
-from utils import get_font
-
-
+from states.main_menu import ChessGame
 class Game:
     def __init__(self):
         p.init()
-        self.SCREEN_WIDTH = 1000
+        self.SCREEN_WIDTH = 800
         self.SCREEN_HEIGHT = 720
         self.game_canvas = p.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
         self.running, self.playing = True, True
         self.state_stack = []
         self.actions = {"left": False, "right": False, "left_click" : False, "molette_up" : False, "molette_down" : False}
         self.title_screen = MainMenu(self)
-        self.font = get_font(100)
         self.state_stack.append(self.title_screen)
     def game_loop(self):
         while self.playing:
@@ -58,12 +55,16 @@ class Game:
     def render(self):
         self.state_stack[-1].render(self.game_canvas)
         p.display.flip()
-    
+    def new_game(self):
+        self.state_stack = [MainMenu(self)]
+        new_game_obj = ChessGame(self)
+        new_game_obj.enter_state()
     def reset_keys(self):
         for action in self.actions:
             self.actions[action] = False
-    def draw_text(self, surface, text, color, x, y):
-        text_surface = self.font.render(text, True, color)
+    @staticmethod
+    def draw_text(surface, text, font, color, x, y):
+        text_surface = font.render(text, True, color)
         # text_surface.set_colorkey((0,0,0))
         text_rect = text_surface.get_rect()
         text_rect.center = (x, y)

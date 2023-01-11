@@ -3,7 +3,7 @@ Game state & valid moves & moves log
 """
 
 
-def isonboard(pos):
+def is_on_board(pos):
     if pos[0] in range(8) and pos[1] in range(8):
         return True
     return False
@@ -53,13 +53,12 @@ class GameState:
         if self.get_valid_moves(self.get_all_possible_moves()) == []:
             if self.in_check():
                 self.checkmate = True
-                self.winner = 'b' if self.white_to_move else 'w'
+                self.winner = 'bc' if self.white_to_move else 'wc'
             else:
                 self.stalemate = True
-                self.winner = 'd'
+                self.winner = 'ds'
     def resign(self):
-
-        self.winner = "b" if self.white_to_move else "w"
+        self.winner = "br" if self.white_to_move else "wr"
     def undo_move(self):
         if len(self.move_log) != 0:
             move = self.move_log.pop(-1)
@@ -141,7 +140,7 @@ class GameState:
         for dir in directions:
             row = r + dir[0]
             col = c + dir[1]
-            while isonboard([row, col]):
+            while is_on_board([row, col]):
                 if self.board[row][col] == "--":
                     moves.append(Move([r,c], [row, col], self.board))
                     row = row + dir[0]
@@ -161,7 +160,7 @@ class GameState:
         for dir in directions:
             row = r + dir[0]
             col = c + dir[1]
-            while isonboard([row, col]):
+            while is_on_board([row, col]):
                 if self.board[row][col] == "--":
                     moves.append(Move([r, c], [row, col], self.board))
                     row = row + dir[0]
@@ -181,7 +180,7 @@ class GameState:
         for dir in directions:
             row = r + dir[0]
             col = c + dir[1]
-            while isonboard([row, col]):
+            while is_on_board([row, col]):
                 if self.board[row][col] == "--":
                     moves.append(Move([r, c], [row, col], self.board))
                     row = row + dir[0]
@@ -200,7 +199,7 @@ class GameState:
         for dir in directions:
             row = r + dir[0]
             col = c + dir[1]
-            if isonboard([row, col]) and self.board[row][col][0] != color:
+            if is_on_board([row, col]) and self.board[row][col][0] != color:
                 moves.append(Move([r, c], [row, col], self.board))
         return moves
     def get_king_moves(self, r, c):
@@ -210,7 +209,7 @@ class GameState:
         for dir in directions:
             row = r + dir[0]
             col = c + dir[1]
-            if isonboard([row, col]) and self.board[row][col][0] != color:
+            if is_on_board([row, col]) and self.board[row][col][0] != color:
                 moves.append(Move([r, c], [row, col], self.board))
 
         for move in self.move_log:
