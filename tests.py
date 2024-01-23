@@ -1,2 +1,0 @@
-liste = [1, 2, 3, 4]
-print(liste[:-2])
